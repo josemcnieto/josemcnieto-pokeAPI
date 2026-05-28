@@ -127,13 +127,18 @@ img{
 }
 
 ul{
-    padding-left: 0;
-
     list-style: none;
+    padding: 0;
 }
 
 li{
+    background: rgba(255,255,255,0.4);
+
     margin: 8px 0;
+
+    padding: 10px;
+
+    border-radius: 10px;
 }
 
 /* móviles pequeños */

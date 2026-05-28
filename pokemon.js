@@ -42,6 +42,7 @@ btn.addEventListener("click", async () => {
 
         out.textContent = "❌ Pokémon no encontrado";
     }
+    
 });
 
 // reproducir sonido
