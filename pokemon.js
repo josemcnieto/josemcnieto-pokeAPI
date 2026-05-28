@@ -16,44 +16,56 @@ btn.addEventListener("click", async () => {
 
     out.textContent = "⌛ Cargando...";
 
-    const pokemon = await respuesta.json();
+    try {
 
-// sonido
-sonidoPokemon = new Audio(pokemon.cries.latest);
+        const respuesta = await fetch(
+            `https://pokeapi.co/api/v2/pokemon/${termino}`
+        );
 
-// tipos
-const tipos = pokemon.types
-    .map(t => t.type.name)
-    .join(", ");
+        if (!respuesta.ok) {
+            throw new Error("No encontrado");
+        }
 
-// estadísticas
-const estadisticasHTML = pokemon.stats
-    .map(stat => `
-        <li>
-            <strong>${stat.stat.name.toUpperCase()}</strong>:
-            ${stat.base_stat}
-        </li>
-    `)
-    .join("");
+        const pokemon = await respuesta.json();
 
-// pintar HTML
-out.innerHTML = `
-    <h2>${pokemon.name.toUpperCase()} (#${pokemon.id})</h2>
+        // sonido
+        sonidoPokemon = new Audio(pokemon.cries.latest);
 
-    <img
-        src="${pokemon.sprites.front_default}"
-        alt="${pokemon.name}"
-        width="150"
-    >
+        // tipos
+        const tipos = pokemon.types
+            .map(t => t.type.name)
+            .join(", ");
 
-    <p><strong>Tipos:</strong> ${tipos}</p>
+        // estadísticas
+        const estadisticasHTML = pokemon.stats.map(stat => {
+            return `
+                <li>
+                    <strong>${stat.stat.name.toUpperCase()}</strong>:
+                    ${stat.base_stat}
+                </li>
+            `;
+        }).join("");
 
-    <h3>Estadísticas</h3>
+        // HTML FINAL
+        out.innerHTML = `
+            <h2>
+                ${pokemon.name.toUpperCase()} (#${pokemon.id})
+            </h2>
 
-    <ul>
-        ${estadisticasHTML}
-    </ul>
-`;
+            <img 
+                src="${pokemon.sprites.front_default}"
+                alt="${pokemon.name}"
+            >
+
+            <p>
+                <strong>Tipos:</strong> ${tipos}
+            </p>
+
+            <ul>
+                ${estadisticasHTML}
+            </ul>
+        `;
+
     } catch (error) {
 
         out.textContent = "❌ Pokémon no encontrado";
